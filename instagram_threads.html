@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram & Threads 倒讚收集網頁 👎</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            font-family: 'Fredoka', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+            user-select: none;
+        }
+
+        /* Pop Neubrutalism Theme Utilities */
+        .pop-card {
+            background-color: #ffffff;
+            border: 3.5px solid #130e26;
+            border-radius: 20px;
+            box-shadow: 6px 6px 0px #130e26;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .pop-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 8px 8px 0px #130e26;
+        }
+
+        .pop-btn {
+            border: 3px solid #130e26;
+            border-radius: 14px;
+            font-weight: 700;
+            box-shadow: 4px 4px 0px #130e26;
+            transition: all 0.12s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .pop-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px #130e26;
+        }
+        .pop-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #130e26;
+        }
+
+        .pop-input {
+            border: 3px solid #130e26;
+            border-radius: 12px;
+            padding: 10px 14px;
+            background: #ffffff;
+            font-weight: 600;
+            color: #130e26;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .pop-input:focus {
+            box-shadow: 0 0 0 3px #FFE600;
+            background: #fffdf0;
+        }
+
+        .tag-pill {
+            border: 2px solid #130e26;
+            border-radius: 999px;
+            padding: 4px 12px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            box-shadow: 2px 2px 0px #130e26;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .tag-pill:hover {
+            transform: scale(1.05);
+        }
+        .tag-pill.selected {
+            background-color: #FFE600 !important;
+            color: #130e26 !important;
+        }
+
+        /* Animated Night Background Gradient */
+        body {
+            background: linear-gradient(180deg, #0d0b21 0%, #1e153d 45%, #2c1b4d 80%, #3a1e5c 100%);
+            min-height: 100vh;
+            color: #130e26;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Floating Moon Animation */
+        @keyframes moonFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(4deg); }
+        }
+        .animated-moon {
+            animation: moonFloat 4.5s ease-in-out infinite;
+            filter: drop-shadow(0 0 18px rgba(255, 230, 0, 0.4));
+            cursor: pointer;
+        }
+        .animated-moon:hover {
+            transform: scale(1.1) rotate(-6deg);
+        }
+
+        /* Twinkling Stars */
+        @keyframes starTwinkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        .star {
+            position: absolute;
+            background-color: #fff;
+            border-radius: 50%;
+            animation: starTwinkle var(--duration, 3s) infinite ease-in-out var(--delay, 0s);
+        }
+
+        /* Floating Clouds */
+        @keyframes floatCloud {
+            0% { transform: translateX(-150px); }
+            100% { transform: translateX(calc(100vw + 150px)); }
+        }
+        .cloud {
+            position: absolute;
+            opacity: 0.25;
+            animation: floatCloud var(--speed, 40s) linear infinite;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+        }
+
+        /* Floating Drifting Dislike Emojis */
+        @keyframes driftEmoji {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.35; }
+            80% { opacity: 0.35; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+        .drift-emoji {
+            position: absolute;
+            font-size: 2rem;
+            animation: driftEmoji var(--dur, 20s) linear infinite;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        /* Shooting Star Animation */
+        @keyframes shootingStar {
+            0% { transform: translateX(0) translateY(0) rotate(-35deg) scale(0); opacity: 1; }
+            70% { opacity: 1; scale: 1; }
+            100% { transform: translateX(-500px) translateY(500px) rotate(-35deg) scale(0.2); opacity: 0; }
+        }
+        .shooting-star {
+            position: absolute;
+            width: 120px;
+            height: 3px;
+            background: linear-gradient(90deg, rgba(255,255,255,1), rgba(255,230,0,0));
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Wiggle keyframe for Easter Egg Moon Click */
+        @keyframes wiggle {
+            0% { transform: rotate(0deg) scale(1.1); }
+            25% { transform: rotate(-15deg) scale(1.2); }
+            50% { transform: rotate(15deg) scale(1.2); }
+            75% { transform: rotate(-10deg) scale(1.15); }
+            100% { transform: rotate(0deg) scale(1); }
+        }
+        .wiggle-anim {
+            animation: wiggle 0.6s ease-in-out;
+        }
+
+        /* Canvas Overlay for Particle Explosion & Meteors */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e153d;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FFE600;
+            border: 2px solid #130e26;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="pb-16">
+
+    <!-- Particle Canvas for Explosions and Meteor Shower -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Background Night Sky Elements -->
+    <div id="night-sky" class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <!-- Stars Container (Generated dynamically via JS) -->
+        <div id="stars-container"></div>
+        
+        <!-- Animated Floating Clouds -->
+        <svg class="cloud top-12" style="--speed: 45s;" width="140" height="60" viewBox="0 0 100 50" fill="#a29bfe">
+            <path d="M20 40 Q10 40 10 30 Q10 20 25 20 Q35 10 50 15 Q65 10 75 20 Q90 20 90 32 Q90 40 80 40 Z" />
+        </svg>
+        <svg class="cloud top-48" style="--speed: 65s; animation-delay: -20s;" width="180" height="75" viewBox="0 0 100 50" fill="#74b9ff">
+            <path d="M20 40 Q10 40 10 30 Q10 20 25 20 Q35 10 50 15 Q65 10 75 20 Q90 20 90 32 Q90 40 80 40 Z" />
+        </svg>
+        <svg class="cloud top-96" style="--speed: 50s; animation-delay: -10s;" width="130" height="55" viewBox="0 0 100 50" fill="#e84393">
+            <path d="M20 40 Q10 40 10 30 Q10 20 25 20 Q35 10 50 15 Q65 10 75 20 Q90 20 90 32 Q90 40 80 40 Z" />
+        </svg>
+
+        <!-- Shooting Star -->
+        <div id="shooting-star" class="shooting-star top-1/4 right-10"></div>
+
+        <!-- Floating Background Dislikes -->
+        <div class="drift-emoji" style="left: 10%; --dur: 18s;">👎</div>
+        <div class="drift-emoji" style="left: 30%; --dur: 25s; animation-delay: -5s;">💔</div>
+        <div class="drift-emoji" style="left: 65%; --dur: 22s; animation-delay: -12s;">💩</div>
+        <div class="drift-emoji" style="left: 85%; --dur: 28s; animation-delay: -3s;">🍅</div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="relative z-10 max-w-4xl mx-auto px-4 pt-6">
+
+        <!-- HEADER SECTION -->
+        <header class="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
+            <div class="text-center md:text-left">
+                <div class="inline-flex items-center gap-2 bg-[#FFE600] border-2 border-[#130e26] px-3 py-1 rounded-full text-xs font-black shadow-[2px_2px_0px_#130e26] mb-2 transform -rotate-2">
+                    🔥 網路假掰文／廢文終結站
+                </div>
+                <h1 class="text-4xl md:text-5xl font-black text-white tracking-wider flex items-center justify-center md:justify-start gap-3 drop-shadow-[0_4px_0_#130e26]">
+                    <span>倒讚收集所</span>
+                    <span class="inline-block bg-[#FF2A85] text-white p-2 rounded-2xl border-3 border-[#130e26] shadow-[3px_3px_0px_#130e26] transform rotate-6">👎</span>
+                </h1>
+                <p class="text-purple-200 text-sm font-semibold mt-1">
+                    收集 Instagram & Threads 上最讓人想踩的尷尬貼文！
+                </p>
+            </div>
+
+            <!-- Clickable Smiling Moon Easter Egg -->
+            <div class="relative group cursor-pointer pointer-events-auto" id="moon-btn" title="點擊月亮觸發「倒讚流星雨」！">
+                <div class="animated-moon bg-[#FFE600] border-4 border-[#130e26] w-24 h-24 rounded-full flex flex-col items-center justify-center shadow-[4px_4px_0px_#130e26] relative overflow-hidden">
+                    <!-- Smiling Moon Face SVG -->
+                    <svg width="60" height="60" viewBox="0 0 100 100">
+                        <!-- Closed happy eyes -->
+                        <path d="M 25 40 Q 35 25 45 40" stroke="#130e26" stroke-width="8" stroke-linecap="round" fill="none"/>
+                        <path d="M 55 40 Q 65 25 75 40" stroke="#130e26" stroke-width="8" stroke-linecap="round" fill="none"/>
+                        <!-- Cute blush -->
+                        <circle cx="22" cy="52" r="8" fill="#FF7675" opacity="0.8"/>
+                        <circle cx="78" cy="52" r="8" fill="#FF7675" opacity="0.8"/>
+                        <!-- Smiling mouth -->
+                        <path d="M 32 60 Q 50 80 68 60" stroke="#130e26" stroke-width="7" stroke-linecap="round" fill="#FF4757"/>
+                    </svg>
+                </div>
+                <div class="absolute -bottom-2 -right-2 bg-[#00F0FF] text-[#130e26] text-[10px] font-black px-2 py-0.5 rounded-full border-2 border-[#130e26] shadow-[2px_2px_0px_#130e26] whitespace-nowrap animate-bounce">
+                    點我！☄️
+                </div>
+            </div>
+        </header>
+
+        <!-- LIVE PK BATTLE GAUGE BAR -->
+        <section class="pop-card p-5 mb-8 bg-[#FFF8E7] relative overflow-hidden">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl">⚔️</span>
+                    <h2 class="text-xl font-black text-[#130e26]">IG vs Threads 倒讚大對決 (PK)</h2>
+                </div>
+                <span id="pk-status-badge" class="text-xs font-extrabold bg-[#FF7675] text-white border-2 border-[#130e26] px-2.5 py-1 rounded-lg shadow-[2px_2px_0px_#130e26]">
+                    戰況激烈中！
+                </span>
+            </div>
+
+            <!-- PK Progress Bar -->
+            <div class="relative h-9 bg-gray-200 border-3 border-[#130e26] rounded-2xl overflow-hidden flex p-1 shadow-[inner_0_2px_4px_rgba(0,0,0,0.1)]">
+                <div id="ig-bar" class="h-full bg-gradient-to-r from-[#FF2A85] to-[#FF7300] rounded-xl flex items-center justify-start px-3 text-white font-black text-xs transition-all duration-500" style="width: 50%;">
+                    📸 IG <span id="ig-percent" class="ml-1">50%</span>
+                </div>
+                <div id="threads-bar" class="h-full bg-gradient-to-r from-[#00F0FF] to-[#0088FF] rounded-xl flex items-center justify-end px-3 text-[#130e26] font-black text-xs transition-all duration-500" style="width: 50%;">
+                    <span id="threads-percent" class="mr-1">50%</span> Threads 🧵
+                </div>
+            </div>
+
+            <!-- PK Stats Info -->
+            <div class="grid grid-cols-3 gap-2 mt-4 text-center">
+                <div class="bg-white border-2 border-[#130e26] rounded-xl p-2 shadow-[2px_2px_0px_#130e26]">
+                    <div class="text-[11px] font-bold text-gray-500">📸 IG 總倒讚</div>
+                    <div id="ig-total-count" class="text-lg font-black text-[#FF2A85]">0</div>
+                </div>
+                <div class="bg-white border-2 border-[#130e26] rounded-xl p-2 shadow-[2px_2px_0px_#130e26]">
+                    <div class="text-[11px] font-bold text-gray-500">💥 累積總踩數</div>
+                    <div id="grand-total-count" class="text-xl font-black text-[#130e26]">0</div>
+                </div>
+                <div class="bg-white border-2 border-[#130e26] rounded-xl p-2 shadow-[2px_2px_0px_#130e26]">
+                    <div class="text-[11px] font-bold text-gray-500">🧵 Threads 總倒讚</div>
+                    <div id="threads-total-count" class="text-xl font-black text-[#0088FF]">0</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- POST SUBMISSION FORM SECTION -->
+        <section class="pop-card p-6 mb-8 bg-white relative">
+            <div class="flex items-center justify-between mb-4 border-b-3 border-[#130e26] pb-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl">💣</span>
+                    <h2 class="text-xl font-black text-[#130e26]">投稿發射倒讚貼文</h2>
+                </div>
+                <span class="text-xs font-bold text-gray-500 bg-purple-100 border border-[#130e26] px-2 py-0.5 rounded-md">
+                    匿名投稿
+                </span>
+            </div>
+
+            <form id="dislike-form" class="space-y-4">
+                <!-- Platform Selection Toggle -->
+                <div>
+                    <label class="block text-xs font-extrabold text-[#130e26] mb-1.5">選擇平台 Platform</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="platform" value="IG" class="peer hidden" checked>
+                            <div class="p-2.5 text-center font-black border-3 border-[#130e26] rounded-xl peer-checked:bg-[#FF2A85] peer-checked:text-white bg-gray-100 text-gray-600 shadow-[3px_3px_0px_#130e26] peer-checked:shadow-[3px_3px_0px_#130e26] transition-all flex items-center justify-center gap-2">
+                                📸 Instagram
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="platform" value="Threads" class="peer hidden">
+                            <div class="p-2.5 text-center font-black border-3 border-[#130e26] rounded-xl peer-checked:bg-[#00F0FF] peer-checked:text-[#130e26] bg-gray-100 text-gray-600 shadow-[3px_3px_0px_#130e26] peer-checked:shadow-[3px_3px_0px_#130e26] transition-all flex items-center justify-center gap-2">
+                                🧵 Threads
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <!-- Title Input -->
+                    <div>
+                        <label class="block text-xs font-extrabold text-[#130e26] mb-1">貼文主題 / 綽號標題</label>
+                        <input type="text" id="input-title" required placeholder="例如：假正能量大師、炫富廢話王" class="w-full pop-input text-sm">
+                    </div>
+                    <!-- Account Input -->
+                    <div>
+                        <label class="block text-xs font-extrabold text-[#130e26] mb-1">帳號 ID (可選)</label>
+                        <input type="text" id="input-account" placeholder="例如：@hustle_king_99" class="w-full pop-input text-sm">
+                    </div>
+                </div>
+
+                <!-- Content Summary Input -->
+                <div>
+                    <label class="block text-xs font-extrabold text-[#130e26] mb-1">尷尬文/廢文內容摘要</label>
+                    <textarea id="input-content" rows="3" required placeholder="摘要一下這篇貼文有多讓人想倒讚... (例：『30歲前一定要懂的10個道理，第8點99%的人做不到，想知道留言+1...』)" class="w-full pop-input text-sm resize-none"></textarea>
+                </div>
+
+                <!-- Dislike Tags Multi-selection -->
+                <div>
+                    <label class="block text-xs font-extrabold text-[#130e26] mb-2">選擇倒讚標籤 (至少選一個)</label>
+                    <div id="tag-container" class="flex flex-wrap gap-2">
+                        <span class="tag-pill bg-pink-100 text-pink-800" data-tag="炫耀文">✨ 炫耀文</span>
+                        <span class="tag-pill bg-purple-100 text-purple-800" data-tag="假心靈雞湯">🍲 假心靈雞湯</span>
+                        <span class="tag-pill bg-yellow-100 text-yellow-800" data-tag="廣告推銷">📢 廣告推銷</span>
+                        <span class="tag-pill bg-blue-100 text-blue-800" data-tag="廢話連篇">💬 廢話連篇</span>
+                        <span class="tag-pill bg-green-100 text-green-800" data-tag="流量密碼">🔑 流量密碼</span>
+                        <span class="tag-pill bg-red-100 text-red-800" data-tag="極致尷尬">🙈 極致尷尬</span>
+                        <span class="tag-pill bg-indigo-100 text-indigo-800" data-tag="業配假評">🤡 業配假評</span>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="submit-btn" class="w-full pop-btn py-3 bg-[#FFE600] text-[#130e26] text-lg font-black hover:bg-[#fff066] active:bg-[#ebd300] mt-2">
+                    💥 踩一個 (Give Downvote!)
+                </button>
+            </form>
+        </section>
+
+        <!-- HALL OF DISLIKES / FEED CONTROLS -->
+        <section class="mb-6 flex flex-col md:flex-row items-center justify-between gap-4">
+            <!-- Platform Filter Tabs -->
+            <div class="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-1">
+                <button class="filter-btn pop-btn px-4 py-2 text-xs bg-[#FFE600] text-[#130e26] active-filter" data-filter="all">
+                    🌈 全部貼文 (<span id="count-filter-all">0</span>)
+                </button>
+                <button class="filter-btn pop-btn px-4 py-2 text-xs bg-white text-[#130e26]" data-filter="IG">
+                    📸 Instagram (<span id="count-filter-ig">0</span>)
+                </button>
+                <button class="filter-btn pop-btn px-4 py-2 text-xs bg-white text-[#130e26]" data-filter="Threads">
+                    🧵 Threads (<span id="count-filter-threads">0</span>)
+                </button>
+            </div>
+
+            <!-- Sort Controls -->
+            <div class="flex items-center gap-2 w-full md:w-auto justify-end">
+                <span class="text-xs font-extrabold text-purple-200">排序：</span>
+                <select id="sort-select" class="pop-input text-xs py-1.5 px-3 bg-white font-bold cursor-pointer">
+                    <option value="most-dislikes">💥 最多倒讚 (Most Dislikes)</option>
+                    <option value="newest">⏰ 最新發布 (Newest)</option>
+                    <option value="most-tomatoes">🍅 最多番茄 (Most Tomatoes)</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- POST FEED GRID CONTAINER -->
+        <section id="posts-feed" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Dynamic Post Cards loaded via JS -->
+        </section>
+
+        <!-- Empty State (Hidden by default) -->
+        <div id="empty-state" class="hidden pop-card p-12 text-center bg-white my-8">
+            <div class="text-6xl mb-3">👻</div>
+            <h3 class="text-2xl font-black text-[#130e26]">這裡一片祥和！</h3>
+            <p class="text-gray-500 font-bold text-sm mt-1">目前沒有任何這類型的倒讚貼文，快去投稿吧！</p>
+        </div>
+
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        /* ==========================================================================
+           1. WEB AUDIO API SYNTHESIZER (Pure JS Sound FX without external assets)
+           ========================================================================== */
+        class SoundSynth {
+            constructor() {
+                this.ctx = null;
+            }
+
+            init() {
+                if (!this.ctx) {
+                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                    if (AudioCtx) this.ctx = new AudioCtx();
+                }
+                if (this.ctx && this.ctx.state === 'suspended') {
+                    this.ctx.resume();
+                }
+            }
+
+            // Downvote Sound (Boing / Pitched Down Bend)
+            playDownvote() {
+                this.init();
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(260, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(60, this.ctx.currentTime + 0.25);
+
+                gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.25);
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.25);
+            }
+
+            // Tomato / Mud Splat Sound (Pop Noise)
+            playSplat() {
+                this.init();
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(450, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(90, this.ctx.currentTime + 0.12);
+
+                gain.gain.setValueAtTime(0.4, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.12);
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.12);
+            }
+
+            // Success Post Chime
+            playSuccess() {
+                this.init();
+                if (!this.ctx) return;
+                const now = this.ctx.currentTime;
+                const freqs = [350, 450, 580, 700];
+                freqs.forEach((f, i) => {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(f, now + i * 0.06);
+                    gain.gain.setValueAtTime(0.2, now + i * 0.06);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.06 + 0.1);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(now + i * 0.06);
+                    osc.stop(now + i * 0.06 + 0.1);
+                });
+            }
+
+            // Meteor Shower Sound (Wooosh Slide)
+            playMeteorSound() {
+                this.init();
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(800, this.ctx.currentTime + 0.4);
+
+                gain.gain.setValueAtTime(0.25, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.4);
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.4);
+            }
+        }
+
+        const sound = new SoundSynth();
+
+        /* ==========================================================================
+           2. CANVAS PARTICLE ENGINE (Burst & Meteor Shower Explosions)
+           ========================================================================== */
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        let particles = [];
+
+        class Particle {
+            constructor(x, y, char, isMeteor = false) {
+                this.x = x;
+                this.y = y;
+                this.char = char;
+                this.isMeteor = isMeteor;
+                
+                if (isMeteor) {
+                    this.vx = (Math.random() - 0.5) * 4 - 8; // move leftwards
+                    this.vy = Math.random() * 8 + 12; // fall downwards fast
+                    this.size = Math.random() * 20 + 24;
+                    this.alpha = 1;
+                    this.rotation = Math.random() * Math.PI * 2;
+                    this.rotSpeed = (Math.random() - 0.5) * 0.1;
+                } else {
+                    this.vx = (Math.random() - 0.5) * 12;
+                    this.vy = (Math.random() - 0.5) * 12 - 4;
+                    this.size = Math.random() * 16 + 20;
+                    this.alpha = 1;
+                    this.gravity = 0.3;
+                    this.rotation = 0;
+                    this.rotSpeed = (Math.random() - 0.5) * 0.2;
+                }
+            }
+
+            update() {
+                if (this.isMeteor) {
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    this.alpha -= 0.012;
+                } else {
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    this.vy += this.gravity;
+                    this.alpha -= 0.02;
+                }
+                this.rotation += this.rotSpeed;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, this.alpha);
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+                ctx.font = `${this.size}px sans-serif`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(this.char, 0, 0);
+                ctx.restore();
+            }
+        }
+
+        function createParticleBurst(x, y, char = '👎', count = 15) {
+            for (let i = 0; i < count; i++) {
+                particles.push(new Particle(x, y, char));
+            }
+        }
+
+        function triggerMeteorShower() {
+            const emojis = ['👎', '💔', '💩', '🍅', '✨', '⚡'];
+            sound.playMeteorSound();
+            for (let i = 0; i < 40; i++) {
+                setTimeout(() => {
+                    const startX = Math.random() * (window.innerWidth + 200);
+                    const startY = -50;
+                    const char = emojis[Math.floor(Math.random() * emojis.length)];
+                    particles.push(new Particle(startX, startY, char, true));
+                }, i * 35);
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.update();
+                p.draw();
+                if (p.alpha <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        /* ==========================================================================
+           3. DEFAULT INITIAL DATA & LOCALSTORAGE LOGIC
+           ========================================================================== */
+        const STORAGE_KEY = 'ig_threads_dislike_posts_v2';
+
+        const defaultPosts = [
+            {
+                id: 'post-1',
+                platform: 'IG',
+                author: '@lifestyle_guru_99',
+                title: '假正能量心靈雞湯大師 🍲',
+                content: '「30歲前一定要懂得的10個硬道理，第8點99%的人都做不到...（底下留言『+1』免費領取線上買房秘笈，其實是邀請加入直銷）」，大家覺得如何？',
+                tags: ['假心靈雞湯', '流量密碼', '廣告推銷'],
+                dislikes: 482,
+                tomatoes: 124,
+                poops: 210,
+                timestamp: Date.now() - 3600000 * 2
+            },
+            {
+                id: 'post-[#2]',
+                platform: 'Threads',
+                author: '@ceo_hustle_daily',
+                title: '炫富廢話極致大師 💼',
+                content: '今天早上 4:30 起床冥想、冰浴、讀完3本書、做完500個俯臥撐。如果你現在還在睡覺，那你這輩子也就這樣了。認同請按讚並轉發給身邊懶惰的朋友。',
+                tags: ['炫耀文', '廢話連篇', '極致尷尬'],
+                dislikes: 730,
+                tomatoes: 310,
+                poops: 420,
+                timestamp: Date.now() - 3600000 * 5
+            },
+            {
+                id: 'post-[#3]',
+                platform: 'IG',
+                author: '@crypto_moon_boss',
+                title: '幣圈暴富洗腦密碼 🚀',
+                content: '別人吃鹽我吃龍蝦，別人上班我打高爾夫。想知道我怎麼靠一支手機月入百萬嗎？點擊簡介連結加入 Telegram 討論群，不要讓貧窮限制你的想像力！',
+                tags: ['廣告推銷', '流量密碼'],
+                dislikes: 890,
+                tomatoes: 450,
+                poops: 580,
+                timestamp: Date.now() - 3600000 * 12
+            },
+            {
+                id: 'post-[#4]',
+                platform: 'Threads',
+                author: '@relationship_expert_0',
+                title: '莫名其妙毒雞湯勸世文 💔',
+                content: '真正愛你的男人，就算你脾氣再壞、把他車刮傷、把他信用卡刷爆，他都會笑著摸摸你的頭說：「寶貝沒關係，只要你開心就好」。同意的女孩幫我點讚。',
+                tags: ['假心靈雞湯', '極致尷尬'],
+                dislikes: 615,
+                tomatoes: 210,
+                poops: 330,
+                timestamp: Date.now() - 3600000 * 24
+            }
+        ];
+
+        function loadPosts() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            if (!data) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultPosts));
+                return defaultPosts;
+            }
+            try {
+                return JSON.parse(data);
+            } catch (e) {
+                return defaultPosts;
+            }
+        }
+
+        function savePosts(posts) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+        }
+
+        let postsState = loadPosts();
+        let currentFilter = 'all';
+        let currentSort = 'most-dislikes';
+        let selectedTagsForNewPost = [];
+
+        /* ==========================================================================
+           4. RENDER & UI UPDATE FUNCTIONS
+           ========================================================================== */
+        
+        // Render Stars in Background
+        function initNightStars() {
+            const container = document.getElementById('stars-container');
+            container.innerHTML = '';
+            for (let i = 0; i < 60; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 3 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.setProperty('--duration', `${Math.random() * 3 + 2}s`);
+                star.style.setProperty('--delay', `${Math.random() * 3}s`);
+                container.appendChild(star);
+            }
+        }
+
+        // Render PK Battle Gauge Bar
+        function updatePKGauge() {
+            let igCount = 0;
+            let threadsCount = 0;
+            let grandTotal = 0;
+
+            postsState.forEach(p => {
+                const itemTotal = p.dislikes + p.tomatoes + p.poops;
+                if (p.platform === 'IG') {
+                    igCount += itemTotal;
+                } else {
+                    threadsCount += itemTotal;
+                }
+                grandTotal += itemTotal;
+            });
+
+            document.getElementById('ig-total-count').textContent = igCount.toLocaleString();
+            document.getElementById('threads-total-count').textContent = threadsCount.toLocaleString();
+            document.getElementById('grand-total-count').textContent = grandTotal.toLocaleString();
+
+            let igPercent = grandTotal === 0 ? 50 : Math.round((igCount / grandTotal) * 100);
+            let threadsPercent = grandTotal === 0 ? 50 : 100 - igPercent;
+
+            const igBar = document.getElementById('ig-bar');
+            const threadsBar = document.getElementById('threads-bar');
+            
+            igBar.style.width = `${igPercent}%`;
+            threadsBar.style.width = `${threadsPercent}%`;
+
+            document.getElementById('ig-percent').textContent = `${igPercent}%`;
+            document.getElementById('threads-percent').textContent = `${threadsPercent}%`;
+        }
+
+        // Render Feed Posts
+        function renderFeed() {
+            const container = document.getElementById('posts-feed');
+            const emptyState = document.getElementById('empty-state');
+
+            // 1. Filter
+            let filtered = postsState.filter(p => {
+                if (currentFilter === 'all') return true;
+                return p.platform === currentFilter;
+            });
+
+            // Update tab badge counts
+            document.getElementById('count-filter-all').textContent = postsState.length;
+            document.getElementById('count-filter-ig').textContent = postsState.filter(p => p.platform === 'IG').length;
+            document.getElementById('count-filter-threads').textContent = postsState.filter(p => p.platform === 'Threads').length;
+
+            // 2. Sort
+            filtered.sort((a, b) => {
+                if (currentSort === 'most-dislikes') {
+                    return b.dislikes - a.dislikes;
+                } else if (currentSort === 'newest') {
+                    return b.timestamp - a.timestamp;
+                } else if (currentSort === 'most-tomatoes') {
+                    return b.tomatoes - a.tomatoes;
+                }
+                return 0;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            // Render cards
+            container.innerHTML = filtered.map(post => {
+                const isIG = post.platform === 'IG';
+                const platformBadge = isIG 
+                    ? `<span class="bg-gradient-to-r from-[#FF2A85] to-[#FF7300] text-white px-2.5 py-0.5 rounded-full border-2 border-[#130e26] text-[11px] font-black">📸 IG</span>`
+                    : `<span class="bg-gradient-to-r from-[#00F0FF] to-[#0088FF] text-[#130e26] px-2.5 py-0.5 rounded-full border-2 border-[#130e26] text-[11px] font-black">🧵 Threads</span>`;
+
+                const timeAgo = getTimeAgo(post.timestamp);
+
+                return `
+                    <div class="pop-card p-5 flex flex-col justify-between bg-white relative overflow-hidden" data-id="${post.id}">
+                        <!-- Top Header -->
+                        <div>
+                            <div class="flex items-center justify-between gap-2 mb-2">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-9 h-9 rounded-full bg-[#FFE600] border-2 border-[#130e26] flex items-center justify-center font-black text-xs shadow-[2px_2px_0px_#130e26]">
+                                        ${isIG ? '📸' : '🧵'}
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-black text-[#130e26] leading-tight">${escapeHTML(post.author || '匿名神祕人')}</div>
+                                        <div class="text-[10px] font-bold text-gray-400">${timeAgo}</div>
+                                    </div>
+                                </div>
+                                ${platformBadge}
+                            </div>
+
+                            <!-- Post Title -->
+                            <h3 class="text-base font-black text-[#130e26] mb-2 leading-snug">
+                                ${escapeHTML(post.title)}
+                            </h3>
+
+                            <!-- Quote / Content Box -->
+                            <div class="bg-gray-50 border-2 border-[#130e26] rounded-xl p-3 mb-3 text-xs font-semibold text-gray-700 leading-relaxed relative">
+                                <span class="text-gray-300 font-serif text-2xl leading-none absolute -top-1 left-2">“</span>
+                                <p class="relative z-10 pl-2">${escapeHTML(post.content)}</p>
+                            </div>
+
+                            <!-- Tag List -->
+                            <div class="flex flex-wrap gap-1.5 mb-4">
+                                ${post.tags.map(t => `<span class="text-[10px] font-extrabold bg-purple-100 text-purple-900 border border-[#130e26] px-2 py-0.5 rounded-md">#${escapeHTML(t)}</span>`).join('')}
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons Row -->
+                        <div class="pt-3 border-t-2 border-gray-100 grid grid-cols-3 gap-2">
+                            <!-- Dislike Button -->
+                            <button onclick="handleAction('${post.id}', 'dislike', event)" class="pop-btn py-2 text-xs bg-[#FF2A85] text-white hover:bg-[#ff1477]">
+                                👎 <span class="font-black">${post.dislikes}</span>
+                            </button>
+                            <!-- Tomato Throw Button -->
+                            <button onclick="handleAction('${post.id}', 'tomato', event)" class="pop-btn py-2 text-xs bg-[#FF4757] text-white hover:bg-[#ff2e43]">
+                                🍅 <span class="font-black">${post.tomatoes}</span>
+                            </button>
+                            <!-- Mud / Poop Button -->
+                            <button onclick="handleAction('${post.id}', 'poop', event)" class="pop-btn py-2 text-xs bg-[#FFA502] text-[#130e26] hover:bg-[#eccc68]">
+                                💩 <span class="font-black">${post.poops}</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        /* Helper to compute relative time string */
+        function getTimeAgo(timestamp) {
+            const seconds = Math.floor((Date.now() - timestamp) / 1000);
+            if (seconds < 60) return '剛剛';
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) return `${minutes} 分鐘前`;
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return `${hours} 小時前`;
+            const days = Math.floor(hours / 24);
+            return `${days} 天前`;
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+
+        /* ==========================================================================
+           5. INTERACTION & ACTION HANDLERS
+           ========================================================================== */
+        
+        // Action Button Handler (Dislike, Tomato, Poop)
+        window.handleAction = function(postId, actionType, event) {
+            const post = postsState.find(p => p.id === postId);
+            if (!post) return;
+
+            const rect = event.currentTarget.getBoundingClientRect();
+            const clickX = rect.left + rect.width / 2;
+            const clickY = rect.top + rect.height / 2;
+
+            if (actionType === 'dislike') {
+                post.dislikes++;
+                sound.playDownvote();
+                createParticleBurst(clickX, clickY, '👎', 12);
+                showToast('👎 踩成功！廢文指數 UP!');
+            } else if (actionType === 'tomato') {
+                post.tomatoes++;
+                sound.playSplat();
+                createParticleBurst(clickX, clickY, '🍅', 12);
+                showToast('🍅 砸中番茄！滿臉紅汁液！');
+            } else if (actionType === 'poop') {
+                post.poops++;
+                sound.playSplat();
+                createParticleBurst(clickX, clickY, '💩', 12);
+                showToast('💩 塗上泥巴！滿臉黑線！');
+            }
+
+            savePosts(postsState);
+            updatePKGauge();
+            renderFeed();
+        };
+
+        // Toast Notification System
+        function showToast(msg) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'pop-card px-4 py-2.5 bg-[#FFE600] text-[#130e26] font-black text-xs flex items-center gap-2 shadow-[3px_3px_0px_#130e26] animate-bounce';
+            toast.innerHTML = `<span>✨</span> <span>${msg}</span>`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+
+        /* ==========================================================================
+           6. EVENT LISTENERS SETUP
+           ========================================================================== */
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            initNightStars();
+            updatePKGauge();
+            renderFeed();
+
+            // Tag Selection in Form
+            const tagContainer = document.getElementById('tag-container');
+            tagContainer.addEventListener('click', (e) => {
+                const target = e.target.closest('.tag-pill');
+                if (!target) return;
+                const tagVal = target.getAttribute('data-tag');
+                if (selectedTagsForNewPost.includes(tagVal)) {
+                    selectedTagsForNewPost = selectedTagsForNewPost.filter(t => t !== tagVal);
+                    target.classList.remove('selected');
+                } else {
+                    selectedTagsForNewPost.push(tagVal);
+                    target.classList.add('selected');
+                }
+            });
+
+            // Form Submit Logic
+            const form = document.getElementById('dislike-form');
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const platform = form.elements['platform'].value;
+                const title = document.getElementById('input-title').value.trim();
+                const account = document.getElementById('input-account').value.trim() || '@anonymous';
+                const content = document.getElementById('input-content').value.trim();
+
+                if (selectedTagsForNewPost.length === 0) {
+                    selectedTagsForNewPost = ['廢話連篇'];
+                }
+
+                const newPost = {
+                    id: 'post-' + Date.now(),
+                    platform: platform,
+                    author: account,
+                    title: title,
+                    content: content,
+                    tags: [...selectedTagsForNewPost],
+                    dislikes: 1,
+                    tomatoes: 0,
+                    poops: 0,
+                    timestamp: Date.now()
+                };
+
+                postsState.unshift(newPost);
+                savePosts(postsState);
+
+                // Sound & Particle Burst on Submit Button
+                const btn = document.getElementById('submit-btn');
+                const rect = btn.getBoundingClientRect();
+                sound.playSuccess();
+                createParticleBurst(rect.left + rect.width / 2, rect.top, '💥', 25);
+
+                showToast('🚀 倒讚貼文成功發射！');
+
+                // Reset Form
+                form.reset();
+                selectedTagsForNewPost = [];
+                document.querySelectorAll('.tag-pill').forEach(el => el.classList.remove('selected'));
+
+                updatePKGauge();
+                renderFeed();
+            });
+
+            // Platform Filter Tabs
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-btn').forEach(b => {
+                        b.classList.remove('bg-[#FFE600]');
+                        b.classList.add('bg-white');
+                    });
+                    btn.classList.remove('bg-white');
+                    btn.classList.add('bg-[#FFE600]');
+
+                    currentFilter = btn.getAttribute('data-filter');
+                    renderFeed();
+                });
+            });
+
+            // Sort Select Dropdown
+            const sortSelect = document.getElementById('sort-select');
+            sortSelect.addEventListener('change', (e) => {
+                currentSort = e.target.value;
+                renderFeed();
+            });
+
+            // Moon Click Easter Egg (Downvote Meteor Shower)
+            const moonBtn = document.getElementById('moon-btn');
+            moonBtn.addEventListener('click', () => {
+                const moon = moonBtn.querySelector('.animated-moon');
+                moon.classList.add('wiggle-anim');
+                triggerMeteorShower();
+                showToast('☄️ 觸發隱藏彩蛋：倒讚流星雨！');
+                setTimeout(() => {
+                    moon.classList.remove('wiggle-anim');
+                }, 600);
+            });
+        });
+    </script>
+</body>
+</html>
